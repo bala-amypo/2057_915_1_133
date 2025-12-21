@@ -1,18 +1,45 @@
-@Override
-public List<TransferSuggestion> generateSuggestions(Long productId) {
-    Product product = productRepository.findById(productId)
-            .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+package com.example.demo.service.impl;
 
-    List<InventoryLevel> levels = inventoryLevelRepository.findByProduct_Id(productId);
-    
-    // Logic: Identify stores with Surplus (Inventory > Forecast) 
-    // and stores with Shortage (Inventory < Forecast)
-    for (InventoryLevel source : levels) {
-        // Simple logic to suggest movement if stock > 100
-        if (source.getQuantity() > 100) {
-            // Find a target store with low stock and create a suggestion
-            // This maps to the TransferSuggestion entity in your DB
-        }
+import com.example.demo.entity.TransferSuggestion;
+import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.repository.TransferSuggestionRepository;
+import com.example.demo.repository.InventoryLevelRepository;
+import com.example.demo.repository.DemandForecastRepository;
+import com.example.demo.repository.StoreRepository;
+import com.example.demo.service.InventoryBalancerService;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class InventoryBalancerServiceImpl implements InventoryBalancerService {
+
+    private final TransferSuggestionRepository transferSuggestionRepository;
+    private final InventoryLevelRepository inventoryLevelRepository;
+    private final DemandForecastRepository demandForecastRepository;
+    private final StoreRepository storeRepository;
+
+    // Strict constructor order: TransferRepo, InvRepo, ForecastRepo, StoreRepo
+    public InventoryBalancerServiceImpl(
+            TransferSuggestionRepository transferSuggestionRepository,
+            InventoryLevelRepository inventoryLevelRepository,
+            DemandForecastRepository demandForecastRepository,
+            StoreRepository storeRepository) {
+        this.transferSuggestionRepository = transferSuggestionRepository;
+        this.inventoryLevelRepository = inventoryLevelRepository;
+        this.demandForecastRepository = demandForecastRepository;
+        this.storeRepository = storeRepository;
     }
-    return transferSuggestionRepository.findByProduct(product);
+
+    @Override
+    public List<TransferSuggestion> generateSuggestions(Long productId) {
+        // Implementation of balancing logic goes here
+        return transferSuggestionRepository.findAll(); 
+    }
+
+    @Override
+    public TransferSuggestion getSuggestionById(Long id) {
+        return transferSuggestionRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Suggestion not found with id: " + id));
+    }
 }
