@@ -1,35 +1,32 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.TransferSuggestion;
 import com.example.demo.repository.TransferSuggestionRepository;
+import com.example.demo.repository.InventoryLevelRepository;
+import com.example.demo.repository.DemandForecastRepository;
+import com.example.demo.repository.StoreRepository;
 import com.example.demo.service.InventoryBalancerService;
-import com.example.demo.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
-import java.util.List;
 
 @Service
 public class InventoryBalancerServiceImpl implements InventoryBalancerService {
 
-    private final TransferSuggestionRepository suggestionRepository;
+    // 1. Declare the fields
+    private final TransferSuggestionRepository transferSuggestionRepository;
+    private final InventoryLevelRepository inventoryLevelRepository;
+    private final DemandForecastRepository demandForecastRepository;
+    private final StoreRepository storeRepository;
 
-    public InventoryBalancerServiceImpl(TransferSuggestionRepository suggestionRepository) {
-        this.suggestionRepository = suggestionRepository;
+    // 2. Use the MANDATORY constructor order (Transfer, Inventory, Forecast, Store)
+    public InventoryBalancerServiceImpl(
+            TransferSuggestionRepository transferSuggestionRepository,
+            InventoryLevelRepository inventoryLevelRepository,
+            DemandForecastRepository demandForecastRepository,
+            StoreRepository storeRepository) {
+        this.transferSuggestionRepository = transferSuggestionRepository;
+        this.inventoryLevelRepository = inventoryLevelRepository;
+        this.demandForecastRepository = demandForecastRepository;
+        this.storeRepository = storeRepository;
     }
 
-    @Override
-    public List<TransferSuggestion> generateSuggestions(Long productId) {
-        // Core redistribution logic
-        return null; 
-    }
-
-    @Override
-    public List<TransferSuggestion> getSuggestionsForStore(Long storeId) {
-        return suggestionRepository.findBySourceStoreIdOrDestinationStoreId(storeId, storeId);
-    }
-
-    @Override
-    public TransferSuggestion getSuggestionById(Long id) {
-        return suggestionRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Suggestion not found with id: " + id));
-    }
+    // Your methods (generateSuggestions, etc.) can now use transferSuggestionRepository
 }
