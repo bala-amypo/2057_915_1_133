@@ -7,6 +7,7 @@ import java.util.List;
 
 @Repository
 public interface TransferSuggestionRepository extends JpaRepository<TransferSuggestion, Long> {
-    List<TransferSuggestion> findBySourceStoreId(Long storeId); // [cite: 170]
-    List<TransferSuggestion> findByProduct_Id(Long productId); // [cite: 172]
+    
+    // Add this line to resolve the compilation error:
+    List<TransferSuggestion> findBySourceStoreIdOrDestinationStoreId(Long sourceStoreId, Long destinationStoreId);
 }
