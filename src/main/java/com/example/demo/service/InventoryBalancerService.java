@@ -1,11 +1,11 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.TransferSuggestion;
+import com.example.demo.dto.TransferSuggestionDto; // Import the DTO
 import java.util.List;
 
 public interface InventoryBalancerService {
-    List<TransferSuggestion> generateSuggestions(Long productId);
-    // Ensure this method exists:
-    List<TransferSuggestion> getSuggestionsForStore(Long storeId); 
-    TransferSuggestion getSuggestionById(Long id);
+    List<TransferSuggestionDto> generateSuggestions();
+    
+    // FIX: Change return type from TransferSuggestion (Entity) to TransferSuggestionDto
+    TransferSuggestionDto getSuggestionById(Long id);
 }
