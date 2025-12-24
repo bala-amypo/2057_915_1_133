@@ -17,5 +17,10 @@ public class Product {
 
     private String name;
 
+    // Added these to resolve the 'cannot find symbol' errors
+    private Double price;
+    private String category;
+
     private String sku;
+    private String description;
 }
