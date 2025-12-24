@@ -1,7 +1,6 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.dto.TransferSuggestionDto;
-import com.example.demo.entity.DemandForecast;
 import com.example.demo.entity.InventoryLevel;
 import com.example.demo.repository.DemandForecastRepository;
 import com.example.demo.repository.InventoryLevelRepository;
@@ -29,27 +28,24 @@ public class InventoryBalancerServiceImpl implements InventoryBalancerService {
         List<InventoryLevel> inventories = inventoryRepository.findAll();
 
         for (InventoryLevel inventory : inventories) {
+            // Use .getStore().getId() and .getProduct().getId()
             Long storeId = inventory.getStore().getId();
             Long productId = inventory.getProduct().getId();
 
-            // Find forecast for this specific product at this store
             forecastRepository.findByStoreIdAndProductId(storeId, productId).ifPresent(forecast -> {
-                int currentStock = inventory.getQuantity();
-                int forecastedDemand = forecast.getForecastQuantity();
-
-                // If demand exceeds stock, we need a transfer
-                if (currentStock < forecastedDemand) {
-                    int needed = forecastedDemand - currentStock;
-                    findSourceAndAddSuggestion(suggestions, inventory, needed);
+                if (inventory.getQuantity() < forecast.getForecastQuantity()) {
+                    int needed = forecast.getForecastQuantity() - inventory.getQuantity();
+                    // Implement suggestion logic here
                 }
             });
         }
         return suggestions;
     }
 
-    private void findSourceAndAddSuggestion(List<TransferSuggestionDto> suggestions, 
-                                           InventoryLevel destinationInv, int quantityNeeded) {
-        // Logic to find another store with surplus and create the DTO
-        // ... implementation details for matching stores ...
+    // FIX: Add the missing method required by the Interface
+    @Override
+    public TransferSuggestionDto getSuggestionById(Long id) {
+        // Return null or throw exception as per your requirement
+        return null; 
     }
 }
