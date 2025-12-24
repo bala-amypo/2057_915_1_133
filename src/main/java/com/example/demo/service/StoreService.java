@@ -4,7 +4,16 @@ import com.example.demo.entity.Store;
 import java.util.List;
 
 public interface StoreService {
-    Store createStore(Store store);
-    Store getStoreById(Long id);
     List<Store> getAllStores();
+    
+    Store getStoreById(Long id);
+    
+    Store createStore(Store store);
+    
+    // FIX: Added these methods to match the implementation
+    Store updateStore(Long id, Store storeDetails);
+    
+    void deleteStore(Long id);
+    
+    Store getStoreByName(String name);
 }

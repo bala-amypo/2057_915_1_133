@@ -3,8 +3,8 @@ package com.example.demo.service.impl;
 import com.example.demo.entity.Store;
 import com.example.demo.repository.StoreRepository;
 import com.example.demo.service.StoreService;
-import com.example.demo.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
@@ -12,9 +12,19 @@ public class StoreServiceImpl implements StoreService {
 
     private final StoreRepository storeRepository;
 
-    // Constructor injection
     public StoreServiceImpl(StoreRepository storeRepository) {
         this.storeRepository = storeRepository;
+    }
+
+    @Override
+    public List<Store> getAllStores() {
+        return storeRepository.findAll();
+    }
+
+    @Override
+    public Store getStoreById(Long id) {
+        return storeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Store not found with id: " + id));
     }
 
     @Override
@@ -23,14 +33,22 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public Store getStoreById(Long id) {
-        return storeRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Store not found with id: " + id));
+    public Store updateStore(Long id, Store storeDetails) {
+        Store store = getStoreById(id);
+        store.setName(storeDetails.getName());
+        store.setLocation(storeDetails.getLocation());
+        return storeRepository.save(store);
     }
 
-    // ADD THIS METHOD TO FIX THE COMPILATION ERROR
     @Override
-    public List<Store> getAllStores() {
-        return storeRepository.findAll();
+    public void deleteStore(Long id) {
+        Store store = getStoreById(id);
+        storeRepository.delete(store);
+    }
+
+    @Override
+    public Store getStoreByName(String name) {
+        // This now matches the findByName method in StoreRepository
+        return storeRepository.findByName(name);
     }
 }
