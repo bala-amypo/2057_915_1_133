@@ -16,7 +16,11 @@ public class Store {
     private Long id;
 
     // This field provides the getName() method via Lombok
-    private String name;
+    // Change this:
+private String name;
+
+// To this:
+private String storeName;
 
     private String location;
 }
