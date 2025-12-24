@@ -1,39 +1,51 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.Product;
-import com.example.demo.exception.BadRequestException;
-import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.repository.ProductRepository;
-import com.example.demo.service.ProductService;
+import com.example.demo.entity.Store;
+import com.example.demo.repository.StoreRepository;
+import com.example.demo.service.StoreService;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class ProductServiceImpl implements ProductService {
+public class StoreServiceImpl implements StoreService {
 
-    private final ProductRepository productRepository;
+    private final StoreRepository storeRepository;
 
-    // Required Constructor Injection
-    public ProductServiceImpl(ProductRepository productRepository) {
-        this.productRepository = productRepository;
+    public StoreServiceImpl(StoreRepository storeRepository) {
+        this.storeRepository = storeRepository;
     }
 
     @Override
-    public Product createProduct(Product product) {
-        if (productRepository.findBySku(product.getSku()) != null) {
-            throw new BadRequestException("SKU already exists");
-        }
-        return productRepository.save(product);
+    public List<Store> getAllStores() {
+        return storeRepository.findAll();
     }
 
     @Override
-    public Product getProductById(Long id) {
-        return productRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
+    public Store getStoreById(Long id) {
+        return storeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Store not found"));
     }
 
     @Override
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public Store createStore(Store store) {
+        return storeRepository.save(store);
+    }
+
+    @Override
+    public Store updateStore(Long id, Store storeDetails) {
+        Store store = getStoreById(id);
+        store.setName(storeDetails.getName());
+        store.setLocation(storeDetails.getLocation());
+        return storeRepository.save(store);
+    }
+
+    @Override
+    public void deleteStore(Long id) {
+        storeRepository.deleteById(id);
+    }
+
+    @Override
+    public Store getStoreByName(String name) {
+        return storeRepository.findByName(name);
     }
 }

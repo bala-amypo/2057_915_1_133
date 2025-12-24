@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 
 @Entity
 @Table(name = "stores")
-@Data // This generates getName() from the field 'name'
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Store {
@@ -15,8 +15,6 @@ public class Store {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Must be named 'name' to provide getName()
     private String name;
-
     private String location;
 }
