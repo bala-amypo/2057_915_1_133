@@ -1,49 +1,55 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.TransferSuggestion;
-import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.dto.TransferSuggestionDto;
+import com.example.demo.entity.DemandForecast;
+import com.example.demo.entity.InventoryLevel;
 import com.example.demo.repository.DemandForecastRepository;
 import com.example.demo.repository.InventoryLevelRepository;
-import com.example.demo.repository.StoreRepository;
-import com.example.demo.repository.TransferSuggestionRepository;
 import com.example.demo.service.InventoryBalancerService;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class InventoryBalancerServiceImpl implements InventoryBalancerService {
 
-    private final TransferSuggestionRepository transferSuggestionRepository;
-    private final InventoryLevelRepository inventoryLevelRepository;
-    private final DemandForecastRepository demandForecastRepository;
-    private final StoreRepository storeRepository;
+    private final InventoryLevelRepository inventoryRepository;
+    private final DemandForecastRepository forecastRepository;
 
-    // MANDATORY CONSTRUCTOR ORDER
-    public InventoryBalancerServiceImpl(
-            TransferSuggestionRepository transferSuggestionRepository,
-            InventoryLevelRepository inventoryLevelRepository,
-            DemandForecastRepository demandForecastRepository,
-            StoreRepository storeRepository) {
-        this.transferSuggestionRepository = transferSuggestionRepository;
-        this.inventoryLevelRepository = inventoryLevelRepository;
-        this.demandForecastRepository = demandForecastRepository;
-        this.storeRepository = storeRepository;
+    public InventoryBalancerServiceImpl(InventoryLevelRepository inventoryRepository, 
+                                        DemandForecastRepository forecastRepository) {
+        this.inventoryRepository = inventoryRepository;
+        this.forecastRepository = forecastRepository;
     }
 
     @Override
-    public List<TransferSuggestion> generateSuggestions(Long productId) {
-        // ... logic to validate active product and calculate suggestions ...
-        return null; // Replace with your logic
+    public List<TransferSuggestionDto> generateSuggestions() {
+        List<TransferSuggestionDto> suggestions = new ArrayList<>();
+        List<InventoryLevel> inventories = inventoryRepository.findAll();
+
+        for (InventoryLevel inventory : inventories) {
+            Long storeId = inventory.getStore().getId();
+            Long productId = inventory.getProduct().getId();
+
+            // Find forecast for this specific product at this store
+            forecastRepository.findByStoreIdAndProductId(storeId, productId).ifPresent(forecast -> {
+                int currentStock = inventory.getQuantity();
+                int forecastedDemand = forecast.getForecastQuantity();
+
+                // If demand exceeds stock, we need a transfer
+                if (currentStock < forecastedDemand) {
+                    int needed = forecastedDemand - currentStock;
+                    findSourceAndAddSuggestion(suggestions, inventory, needed);
+                }
+            });
+        }
+        return suggestions;
     }
 
-    @Override
-    public List<TransferSuggestion> getSuggestionsForStore(Long storeId) {
-        return transferSuggestionRepository.findBySourceStoreId(storeId);
-    }
-
-    @Override
-    public TransferSuggestion getSuggestionById(Long id) {
-        return transferSuggestionRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Transfer suggestion not found with id: " + id));
+    private void findSourceAndAddSuggestion(List<TransferSuggestionDto> suggestions, 
+                                           InventoryLevel destinationInv, int quantityNeeded) {
+        // Logic to find another store with surplus and create the DTO
+        // ... implementation details for matching stores ...
     }
 }
