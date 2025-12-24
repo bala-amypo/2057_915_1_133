@@ -7,7 +7,6 @@ import com.example.demo.repository.DemandForecastRepository;
 import com.example.demo.repository.InventoryLevelRepository;
 import com.example.demo.service.InventoryBalancerService;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 

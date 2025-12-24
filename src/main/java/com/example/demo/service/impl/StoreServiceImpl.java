@@ -4,7 +4,6 @@ import com.example.demo.entity.Store;
 import com.example.demo.repository.StoreRepository;
 import com.example.demo.service.StoreService;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -24,7 +23,7 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public Store getStoreById(Long id) {
         return storeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Store not found with id: " + id));
+                .orElseThrow(() -> new RuntimeException("Store not found"));
     }
 
     @Override
@@ -42,13 +41,11 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public void deleteStore(Long id) {
-        Store store = getStoreById(id);
-        storeRepository.delete(store);
+        storeRepository.deleteById(id);
     }
 
     @Override
     public Store getStoreByName(String name) {
-        // This now matches the findByName method in StoreRepository
         return storeRepository.findByName(name);
     }
 }
