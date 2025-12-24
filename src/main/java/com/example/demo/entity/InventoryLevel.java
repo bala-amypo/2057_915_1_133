@@ -1,9 +1,10 @@
 package com.example.demo.entity;
 
+import lombok.Data; // <--- Add this line
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+
 @Entity
-@Data // Ensure this is present
+@Data // This will now work
 public class InventoryLevel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
