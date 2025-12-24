@@ -1,5 +1,9 @@
-package com.example.demo.dto; // Must match the folder structure
+package com.example.demo.dto;
 
+import lombok.Data;
+
+@Data
 public class AuthRequestDto {
-    // fields, getters, setters
+    private String email;    [cite: 142]
+    private String password; [cite: 142]
 }
