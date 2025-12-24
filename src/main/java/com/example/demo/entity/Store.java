@@ -1,13 +1,13 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import lombok.Data; // Ensure this import exists
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
 @Entity
 @Table(name = "stores")
-@Data
+@Data // This generates getName() from the field 'name'
 @NoArgsConstructor
 @AllArgsConstructor
 public class Store {
@@ -15,12 +15,8 @@ public class Store {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // This field provides the getName() method via Lombok
-    // Change this:
-private String name;
-
-// To this:
-private String storeName;
+    // Must be named 'name' to provide getName()
+    private String name;
 
     private String location;
 }

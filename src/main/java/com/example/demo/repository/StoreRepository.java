@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface StoreRepository extends JpaRepository<Store, Long> {
-
-Store findByName(String name);// Required for uniqueness check [cite: 150]
+    // Change findByStoreName to findByName
+    Store findByName(String name);
 }
