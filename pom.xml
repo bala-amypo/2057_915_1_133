@@ -115,4 +115,4 @@
             </plugin>
         </plugins>
     </build>
-</project>mvn clean test-compile -Dmaven.compiler.source=17 -Dmaven.compiler.target=17 -Dmaven.compiler.release=17
+</project>
