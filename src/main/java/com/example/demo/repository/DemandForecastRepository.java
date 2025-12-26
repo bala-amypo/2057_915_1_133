@@ -1,34 +1,11 @@
-package com.example.demo.entity;
+package com.example.demo.repository;
 
-import jakarta.persistence.*;
-import lombok.Data;
-import java.time.LocalDate;
+import com.example.demo.entity.DemandForecast;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import java.util.List;
 
-@Entity
-@Data
-public class DemandForecast {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "store_id")
-    private Store store;
-
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
-
-    // Field used by the Test class (t18, t19, t35)
-    private Integer forecastedDemand; 
-    
-    private LocalDate forecastDate;
-
-    /**
-     * Helper method to satisfy the InventoryBalancerServiceImpl call:
-     * DemandForecast::getForecastQuantity
-     */
-    public Integer getForecastQuantity() {
-        return forecastedDemand;
-    }
+@Repository
+public interface DemandForecastRepository extends JpaRepository<DemandForecast, Long> {
+    List<DemandForecast> findByStoreId(Long storeId);
 }

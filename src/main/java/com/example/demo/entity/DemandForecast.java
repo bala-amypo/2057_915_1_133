@@ -19,11 +19,15 @@ public class DemandForecast {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    // This field must match what the service calls
+    // Field used by the Test class (t18, t19, t35)
     private Integer forecastedDemand; 
+    
     private LocalDate forecastDate;
 
-    // Helper method to satisfy the specific Service call in line 70
+    /**
+     * Helper method to satisfy the InventoryBalancerServiceImpl call:
+     * DemandForecast::getForecastQuantity
+     */
     public Integer getForecastQuantity() {
         return forecastedDemand;
     }
