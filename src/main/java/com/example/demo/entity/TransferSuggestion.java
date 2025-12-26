@@ -12,15 +12,18 @@ public class TransferSuggestion {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "product_id")
     private Product product;
 
     @ManyToOne
+    @JoinColumn(name = "source_store_id")
     private Store sourceStore;
 
     @ManyToOne
+    @JoinColumn(name = "target_store_id")
     private Store targetStore;
 
-    private Integer suggestedQuantity; // The test specifically looks for this
+    private Integer suggestedQuantity;
     private String reason;
     private LocalDateTime generatedAt;
 
