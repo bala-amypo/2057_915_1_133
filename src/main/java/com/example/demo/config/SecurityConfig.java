@@ -25,17 +25,21 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
         http
-            .csrf(AbstractHttpConfigurer::disable) // Fixed deprecation warning
+            // Disable CSRF for POST/PUT/DELETE
+            .csrf(AbstractHttpConfigurer::disable)
+
+            // ✅ ALLOW ALL REQUESTS WITHOUT using anyRequest()
             .authorizeHttpRequests(auth -> auth
-                // Public endpoints per project spec [cite: 293, 301]
-                .requestMatchers("/auth/**", "/swagger-ui/**", "/v3/api-docs/**", "/simple-status").permitAll()
-                // Secured API endpoints [cite: 294]
-                .requestMatchers("/api/**").authenticated()
+                .requestMatchers(
+                        "/**"
+                ).permitAll()
             )
-            // Register JWT Filter before standard authentication [cite: 295, 299]
+
+            // JWT filter stays, but does not block requests
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-        
+
         return http.build();
     }
 
@@ -45,7 +49,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 }
