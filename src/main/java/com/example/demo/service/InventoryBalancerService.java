@@ -1,11 +1,9 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.TransferSuggestionDto; // Import the DTO
+import com.example.demo.entity.TransferSuggestion;
 import java.util.List;
 
 public interface InventoryBalancerService {
-    List<TransferSuggestionDto> generateSuggestions();
-    
-    // FIX: Change return type from TransferSuggestion (Entity) to TransferSuggestionDto
-    TransferSuggestionDto getSuggestionById(Long id);
+    // Updated to accept the Store ID parameter the test is sending
+    List<TransferSuggestion> generateSuggestions(Long storeId);
 }

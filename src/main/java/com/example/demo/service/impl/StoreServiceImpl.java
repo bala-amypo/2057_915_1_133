@@ -48,4 +48,10 @@ public class StoreServiceImpl implements StoreService {
     public Store getStoreByName(String name) {
         return storeRepository.findByName(name);
     }
+    @Override
+public void deactivateStore(Long id) {
+    Store store = storeRepository.findById(id).orElseThrow();
+    store.setActive(false);
+    storeRepository.save(store);
+}
 }

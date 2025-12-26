@@ -10,4 +10,5 @@ public interface StoreService {
     Store updateStore(Long id, Store storeDetails);
     void deleteStore(Long id);
     Store getStoreByName(String name);
+    void deactivateStore(Long id);
 }

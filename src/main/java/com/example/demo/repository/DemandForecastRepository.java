@@ -8,10 +8,10 @@ import java.util.Optional;
 
 @Repository
 public interface DemandForecastRepository extends JpaRepository<DemandForecast, Long> {
-    
-    // Add this line to fix the compilation error
     Optional<DemandForecast> findByStoreIdAndProductId(Long storeId, Long productId);
-
-    // This is likely also used in your service
     List<DemandForecast> findByStoreId(Long storeId);
+    
+    // Required by the test suite for specific lookups
+    List<DemandForecast> findByProduct_Id(Long productId);
+    List<DemandForecast> findByStore_Id(Long storeId);
 }
