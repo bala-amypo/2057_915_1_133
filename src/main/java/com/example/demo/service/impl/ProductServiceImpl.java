@@ -3,18 +3,15 @@ package com.example.demo.service.impl;
 import com.example.demo.entity.Product;
 import com.example.demo.repository.ProductRepository;
 import com.example.demo.service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    private final ProductRepository productRepository;
-
-    public ProductServiceImpl(ProductRepository productRepository) {
-        this.productRepository = productRepository;
-    }
+    @Autowired
+    private ProductRepository productRepository;
 
     @Override
     public List<Product> getAllProducts() {
@@ -23,34 +20,19 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product getProductById(Long id) {
-        return productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+        return productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
     }
 
     @Override
     public Product createProduct(Product product) {
+        product.setActive(true);
         return productRepository.save(product);
     }
 
     @Override
-    public Product updateProduct(Long id, Product productDetails) {
+    public void deactivateProduct(Long id) {
         Product product = getProductById(id);
-        
-        // Updating fields to match the entity
-        product.setName(productDetails.getName());
-        product.setPrice(productDetails.getPrice());
-        product.setCategory(productDetails.getCategory());
-        
-        // Optional fields if you added them to the entity
-        product.setSku(productDetails.getSku());
-        product.setDescription(productDetails.getDescription());
-        
-        return productRepository.save(product);
-    }
-
-    @Override
-    public void deleteProduct(Long id) {
-        Product product = getProductById(id);
-        productRepository.delete(product);
+        product.setActive(false);
+        productRepository.save(product);
     }
 }

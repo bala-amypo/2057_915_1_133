@@ -7,8 +7,5 @@ public interface ProductService {
     List<Product> getAllProducts();
     Product getProductById(Long id);
     Product createProduct(Product product);
-    
-    // Add these two signatures:
-    Product updateProduct(Long id, Product productDetails);
-    void deleteProduct(Long id);
+    void deactivateProduct(Long id); // Required by test
 }
