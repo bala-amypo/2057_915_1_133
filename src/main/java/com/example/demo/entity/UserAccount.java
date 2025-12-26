@@ -13,22 +13,21 @@ public class UserAccount {
 
     @Column(unique = true, nullable = false)
     private String email;
-
-    private String fullName;
+    
     private String password;
     private String role;
-
+    private String fullName;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
+    public void prePersist() { // Must be public for the test to access
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
     @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
+    public void preUpdate() { // Must be public for the test to access
+        this.updatedAt = LocalDateTime.now();
     }
 }
