@@ -28,14 +28,20 @@ public class ProductController {
         return ResponseEntity.ok(product);
     }
 
+    // ✅ FIXED: return 201 CREATED
     @PostMapping
-    public Product createProduct(@RequestBody Product product) {
-        return productService.createProduct(product);
+    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
+        Product savedProduct = productService.createProduct(product);
+        return ResponseEntity.status(201).body(savedProduct);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product productDetails) {
-        Product updatedProduct = productService.updateProduct(id, productDetails);
+    public ResponseEntity<Product> updateProduct(
+            @PathVariable Long id,
+            @RequestBody Product productDetails) {
+
+        Product updatedProduct =
+                productService.updateProduct(id, productDetails);
         return ResponseEntity.ok(updatedProduct);
     }
 
