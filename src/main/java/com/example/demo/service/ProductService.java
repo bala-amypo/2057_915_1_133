@@ -7,5 +7,9 @@ public interface ProductService {
     List<Product> getAllProducts();
     Product getProductById(Long id);
     Product createProduct(Product product);
-    void deactivateProduct(Long id); // Required by test
+    void deactivateProduct(Long id);
+    
+    // Add these two methods to fix the Controller errors
+    Product updateProduct(Long id, Product productDetails);
+    void deleteProduct(Long id);
 }
