@@ -19,6 +19,12 @@ public class DemandForecast {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    private Integer forecastedDemand;
+    // This field must match what the service calls
+    private Integer forecastedDemand; 
     private LocalDate forecastDate;
+
+    // Helper method to satisfy the specific Service call in line 70
+    public Integer getForecastQuantity() {
+        return forecastedDemand;
+    }
 }
