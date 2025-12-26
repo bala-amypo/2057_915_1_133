@@ -1,24 +1,36 @@
 package com.example.demo.entity;
 
-import lombok.Data;
 import jakarta.persistence.*;
-import java.time.LocalDate; // Add this import
+import lombok.Data;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
-public class DemandForecast {
+public class UserAccount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    private Store store;
+    @Column(unique = true, nullable = false)
+    private String email;
 
-    @ManyToOne
-    private Product product;
+    private String fullName;
+    private String password;
+    private String role;
 
-    private Integer forecastQuantity;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
-    // FIX: Add this missing field
-    private LocalDate forecastDate; 
+    // Renamed to match test t26: user.prePersist()
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    // Renamed to match test t27: user.preUpdate()
+    @PreUpdate
+    public void preUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
 }
