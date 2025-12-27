@@ -11,23 +11,22 @@ public class UserAccount {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
     private String email;
-    
     private String password;
-    private String role;
     private String fullName;
+    private String role;
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     @PrePersist
-    public void prePersist() { // Must be public for the test to access
+    public void prePersist() {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
 
     @PreUpdate
-    public void preUpdate() { // Must be public for the test to access
+    public void preUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
 }

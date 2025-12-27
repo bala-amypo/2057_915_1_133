@@ -10,10 +10,8 @@ public class Store {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;        // Matches getName()
-    private String location;    // Matches getLocation()
-    private String storeName;   // For the test case requirements
+    private String storeName; // Use "storeName" NOT "name"
     private String address;
-    private String region;
+    private String region;    // Use "region" NOT "location"
     private boolean active = true;
 }
