@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -15,14 +17,18 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody RegisterRequestDto registration) {
+    public ResponseEntity<Map<String, String>> register(@RequestBody RegisterRequestDto registration) {
         authService.register(registration);
-        return ResponseEntity.ok("User registered successfully");
+        // Returning JSON instead of plain string for consistency
+        return ResponseEntity.ok(Map.of("message", "User registered successfully"));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody AuthRequestDto authRequest) {
+    public ResponseEntity<Map<String, String>> login(@RequestBody AuthRequestDto authRequest) {
         String token = authService.login(authRequest);
-        return ResponseEntity.ok(token);
+        
+        // This fix wraps the raw string into a JSON object: {"token": "..."}
+        // This allows your test's JSON parser to find the 'token' field.
+        return ResponseEntity.ok(Map.of("token", token));
     }
 }
