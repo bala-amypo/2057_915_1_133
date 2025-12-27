@@ -4,14 +4,13 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
-@Data
+@Data // This fixes getStoreName, getAddress, getRegion, isActive, setActive
 public class Store {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private String storeName; // Use "storeName" NOT "name"
+    private String storeName;
     private String address;
-    private String region;    // Use "region" NOT "location"
+    private String region;
     private boolean active = true;
 }
