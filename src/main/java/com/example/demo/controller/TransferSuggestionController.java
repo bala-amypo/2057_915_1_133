@@ -1,61 +1,54 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.TransferSuggestionDto;
 import com.example.demo.entity.TransferSuggestion;
-import com.example.demo.service.InventoryBalancerService;
+import com.example.demo.service.TransferSuggestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/suggestions")
+@RequestMapping("/api/transfer-suggestions")
 public class TransferSuggestionController {
 
     @Autowired
-    private InventoryBalancerService balancerService;
+    private TransferSuggestionService service;
 
     @GetMapping
-    public ResponseEntity<List<TransferSuggestionDto>> getAllSuggestions() {
-        List<TransferSuggestion> suggestions = balancerService.generateSuggestions();
-        List<TransferSuggestionDto> dtos = suggestions.stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(dtos);
+    public ResponseEntity<List<Map<String, Object>>> getAllSuggestions() {
+        List<TransferSuggestion> suggestions = service.getAllSuggestions();
+        
+        // Mapping entities to a clean JSON response
+        List<Map<String, Object>> response = suggestions.stream().map(entity -> {
+            return Map.of(
+                "id", entity.getId(),
+                "product", Map.of(
+                    "id", entity.getProduct().getId(),
+                    "name", entity.getProduct().getName(),
+                    "sku", entity.getProduct().getSku()
+                ),
+                "sourceStore", Map.of(
+                    "id", entity.getSourceStore().getId(),
+                    "name", entity.getSourceStore().getStoreName() // Fixed from getName()
+                ),
+                "targetStore", Map.of(
+                    "id", entity.getTargetStore().getId(),
+                    "name", entity.getTargetStore().getStoreName() // Fixed from getName()
+                ),
+                "quantity", entity.getSuggestedQuantity(),
+                "reason", entity.getReason()
+            );
+        }).collect(Collectors.toList());
+
+        return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<TransferSuggestionDto> getSuggestion(@PathVariable Long id) {
-        TransferSuggestion suggestion = balancerService.getSuggestionById(id);
-        if (suggestion == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(convertToDto(suggestion));
-    }
-
-    private TransferSuggestionDto convertToDto(TransferSuggestion entity) {
-        TransferSuggestionDto dto = new TransferSuggestionDto();
-        dto.setId(entity.getId());
-        
-        if (entity.getProduct() != null) {
-            dto.setProductId(entity.getProduct().getId());
-            dto.setProductName(entity.getProduct().getName());
-        }
-        
-        if (entity.getSourceStore() != null) {
-            dto.setSourceStoreId(entity.getSourceStore().getId());
-            dto.setSourceStoreName(entity.getSourceStore().getName());
-        }
-        
-        if (entity.getTargetStore() != null) {
-            dto.setTargetStoreId(entity.getTargetStore().getId());
-            dto.setTargetStoreName(entity.getTargetStore().getName());
-        }
-        
-        dto.setQuantity(entity.getSuggestedQuantity());
-        dto.setReason(entity.getReason());
-        return dto;
+    @PostMapping("/generate")
+    public ResponseEntity<Void> generateSuggestions() {
+        service.generateTransferSuggestions();
+        return ResponseEntity.ok().build();
     }
 }
