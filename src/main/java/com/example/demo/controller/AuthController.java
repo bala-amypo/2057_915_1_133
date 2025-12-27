@@ -23,10 +23,12 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDto> login(@RequestBody AuthRequestDto request) {
-        // The service should return the raw JWT string
+        // 1. Service returns the String token
         String jwt = authService.login(request);
         
-        // Wrap it in the DTO so the JSON key is "token"
-        return ResponseEntity.ok(new AuthResponseDto(jwt));
+        // 2. Wrap the String in the DTO to match test expectations
+        AuthResponseDto response = new AuthResponseDto(jwt);
+        
+        return ResponseEntity.ok(response);
     }
 }

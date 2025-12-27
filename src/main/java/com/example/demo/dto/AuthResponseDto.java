@@ -8,6 +8,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AuthResponseDto {
-    // This MUST be named "token" so the JSON output is {"token": "..."}
-    private String token; 
+    private String token; // Test looks for node.get("token")
 }
