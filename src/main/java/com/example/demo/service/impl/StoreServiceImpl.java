@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class StoreServiceImpl implements StoreService { // Ensure 'implements StoreService'
+public class StoreServiceImpl implements StoreService {
 
     @Autowired
     private StoreRepository storeRepository;
@@ -39,5 +39,10 @@ public class StoreServiceImpl implements StoreService { // Ensure 'implements St
         Store store = getStoreById(id);
         store.setActive(false);
         storeRepository.save(store);
+    }
+
+    @Override
+    public void deactivateStore(Long id) {
+        deleteStore(id);
     }
 }

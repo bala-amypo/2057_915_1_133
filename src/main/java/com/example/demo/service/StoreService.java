@@ -9,4 +9,5 @@ public interface StoreService {
     Store createStore(Store store);
     Store updateStore(Long id, Store details);
     void deleteStore(Long id);
+    void deactivateStore(Long id); // Method expected by Test
 }

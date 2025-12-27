@@ -2,9 +2,10 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import java.time.LocalDateTime;
 
 @Entity
-@Data // This fixes getId, getProduct, getSourceStore, getTargetStore, etc.
+@Data
 public class TransferSuggestion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,4 +22,6 @@ public class TransferSuggestion {
 
     private Integer suggestedQuantity;
     private String reason;
+    
+    private LocalDateTime generatedAt = LocalDateTime.now();
 }
