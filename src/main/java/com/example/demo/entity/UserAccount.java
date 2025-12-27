@@ -19,14 +19,16 @@ public class UserAccount {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
+    // CHANGE: from protected to public
     @PrePersist
-    protected void prePersist() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
+    // CHANGE: from protected to public
     @PreUpdate
-    protected void preUpdate() {
-        updatedAt = LocalDateTime.now();
+    public void preUpdate() {
+        this.updatedAt = LocalDateTime.now();
     }
 }
