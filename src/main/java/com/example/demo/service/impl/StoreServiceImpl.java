@@ -3,45 +3,39 @@ package com.example.demo.service.impl;
 import com.example.demo.entity.Store;
 import com.example.demo.repository.StoreRepository;
 import com.example.demo.service.StoreService;
-import com.example.demo.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
-@Service 
-public class StoreServiceImpl implements StoreService { // Must be 'implements'
+@Service
+public class StoreServiceImpl implements StoreService { // Ensure 'implements StoreService'
 
     @Autowired
     private StoreRepository storeRepository;
 
     @Override
-    public Store createStore(Store store) {
+    public List<Store> getAllStores() { return storeRepository.findAll(); }
+
+    @Override
+    public Store getStoreById(Long id) { 
+        return storeRepository.findById(id).orElseThrow(() -> new RuntimeException("Store not found")); 
+    }
+
+    @Override
+    public Store createStore(Store store) { return storeRepository.save(store); }
+
+    @Override
+    public Store updateStore(Long id, Store details) {
+        Store store = getStoreById(id);
+        store.setStoreName(details.getStoreName());
+        store.setAddress(details.getAddress());
+        store.setRegion(details.getRegion());
+        store.setActive(details.isActive());
         return storeRepository.save(store);
     }
 
     @Override
-    public List<Store> getAllStores() {
-        return storeRepository.findAll();
-    }
-
-    @Override
-    public Store getStoreById(Long id) {
-        return storeRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Store not found"));
-    }
-
-    @Override
-    public Store updateStore(Long id, Store details) {
-        Store existing = getStoreById(id);
-        existing.setStoreName(details.getStoreName()); // Match Entity field
-        existing.setAddress(details.getAddress());
-        existing.setRegion(details.getRegion());       // Match Entity field
-        existing.setActive(details.isActive());
-        return storeRepository.save(existing);
-    }
-
-    @Override
-    public void deactivateStore(Long id) {
+    public void deleteStore(Long id) {
         Store store = getStoreById(id);
         store.setActive(false);
         storeRepository.save(store);
