@@ -23,9 +23,13 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private JwtUtil jwtUtil;
 
+    // =====================================================
+    // REGISTER
+    // =====================================================
     @Override
     public void register(RegisterRequestDto registration) {
 
+        // Duplicate email check (required by tests)
         if (userRepository.findByEmail(registration.getEmail()).isPresent()) {
             throw new BadRequestException("Email already exists");
         }
@@ -34,15 +38,23 @@ public class AuthServiceImpl implements AuthService {
         user.setEmail(registration.getEmail());
         user.setFullName(registration.getFullName());
         user.setPassword(passwordEncoder.encode(registration.getPassword()));
-        user.setRole(registration.getRole());
+
+        // Default role if not provided
+        if (registration.getRole() == null || registration.getRole().isBlank()) {
+            user.setRole("ROLE_USER");
+        } else {
+            user.setRole(registration.getRole());
+        }
 
         userRepository.save(user);
     }
 
+    // =====================================================
+    // LOGIN
+    // =====================================================
     @Override
     public String login(AuthRequestDto authRequest) {
 
-        // ✅ UserAccount comes ONLY from repository
         UserAccount user = userRepository.findByEmail(authRequest.getEmail())
                 .orElseThrow(() -> new BadRequestException("User not found"));
 
@@ -50,7 +62,7 @@ public class AuthServiceImpl implements AuthService {
             throw new BadRequestException("Invalid credentials");
         }
 
-        // ✅ RETURN STRING TOKEN — NOT UserAccount
+        // ✅ FIX: generate token using EMAIL (String)
         return jwtUtil.generateToken(user.getEmail());
     }
 }
