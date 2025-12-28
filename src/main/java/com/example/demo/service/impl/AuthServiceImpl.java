@@ -42,6 +42,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public String login(AuthRequestDto authRequest) {
 
+        // ✅ UserAccount comes ONLY from repository
         UserAccount user = userRepository.findByEmail(authRequest.getEmail())
                 .orElseThrow(() -> new BadRequestException("User not found"));
 
@@ -49,7 +50,7 @@ public class AuthServiceImpl implements AuthService {
             throw new BadRequestException("Invalid credentials");
         }
 
-        // ✅ RETURN STRING TOKEN (not UserAccount)
+        // ✅ RETURN STRING TOKEN — NOT UserAccount
         return jwtUtil.generateToken(user.getEmail());
     }
 }
