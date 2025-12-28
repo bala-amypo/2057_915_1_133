@@ -49,6 +49,7 @@ public class AuthServiceImpl implements AuthService {
             throw new BadRequestException("Invalid credentials");
         }
 
+        // ✅ RETURN STRING TOKEN (not UserAccount)
         return jwtUtil.generateToken(user.getEmail());
     }
 }

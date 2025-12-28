@@ -21,6 +21,12 @@ public class InventoryBalancerServiceImpl implements InventoryBalancerService {
     @Autowired
     private ProductRepository productRepository;
 
+    // ✅ REQUIRED BY INTERFACE
+    @Override
+    public List<TransferSuggestion> generateSuggestions() {
+        return suggestionRepository.findAll();
+    }
+
     @Override
     public List<TransferSuggestion> generateSuggestions(Long productId) {
 
