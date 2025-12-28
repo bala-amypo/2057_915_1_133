@@ -14,13 +14,10 @@ import java.util.Map;
 public class JwtUtil {
 
     private static final String SECRET =
-            "your-very-secure-secret-key-that-is-long-enough";
+            "my-super-secure-jwt-secret-key-which-is-long-enough-256-bit";
 
-    // Create signing key ONCE
-    private final Key signingKey =
-            Keys.hmacShaKeyFor(SECRET.getBytes());
+    private final Key signingKey = Keys.hmacShaKeyFor(SECRET.getBytes());
 
-    // ================= APPLICATION TOKEN =================
     public String generateToken(UserAccount user) {
         return Jwts.builder()
                 .setSubject(user.getEmail())
@@ -31,7 +28,6 @@ public class JwtUtil {
                 .compact();
     }
 
-    // ================= TEST TOKEN =================
     public String generateToken(Map<String, Object> claims, String subject) {
         return Jwts.builder()
                 .setClaims(claims)
@@ -42,7 +38,9 @@ public class JwtUtil {
                 .compact();
     }
 
-    // ================= PARSING =================
+    // =====================================================
+    // TOKEN PARSING
+    // =====================================================
     public String getUsername(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(signingKey)
@@ -56,6 +54,9 @@ public class JwtUtil {
         return getUsername(token).equals(username);
     }
 
+    // =====================================================
+    // EXPIRATION
+    // =====================================================
     public long getExpirationMillis() {
         return 1000 * 60 * 60 * 10; // 10 hours
     }
